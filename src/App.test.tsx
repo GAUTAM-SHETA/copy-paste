@@ -2,8 +2,8 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import App from './App';
 
-test('renders learn react link', () => {
+test('renders snippet manager shell', () => {
   render(<App />);
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
+  expect(screen.getByText(/copy paste/i)).toBeInTheDocument();
+  expect(screen.getAllByText(/root selected/i).length).toBeGreaterThan(0);
 });
