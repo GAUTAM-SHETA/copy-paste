@@ -264,7 +264,7 @@ select:focus {
 .bulk-bar button,
 .safety-panel button,
 .command-palette button {
-  min-height: 36px;
+  min-height: 28px;
   padding: 0 10px;
 }
 
@@ -499,7 +499,7 @@ select:focus {
   height: 100vh;
   min-width: 0;
   overflow: auto;
-  padding: 22px;
+  padding: 10px;
 }
 
 .workspace-grid {
