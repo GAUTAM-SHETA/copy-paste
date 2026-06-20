@@ -11,6 +11,7 @@ import {
   Folder as FolderIcon,
   FolderPlus,
   Heart,
+  HelpCircle,
   Import,
   KeyRound,
   Grid2X2,
@@ -522,6 +523,7 @@ function App() {
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [deletedDraft, setDeletedDraft] = useState<DeletedDraft | null>(null);
   const [commandOpen, setCommandOpen] = useState(false);
+  const [showHelp, setShowHelp] = useState(false);
   const [showSafety, setShowSafety] = useState(false);
   const [locked, setLocked] = useState(() => Boolean(localStorage.getItem(LOCK_KEY)));
   const [lockInput, setLockInput] = useState('');
@@ -940,6 +942,9 @@ function App() {
             <p className="eyebrow">Local clipboard</p>
             <h1>Copy Paste</h1>
           </div>
+          <button className="help-trigger" type="button" onClick={() => setShowHelp(true)} title="How to use" aria-label="How to use">
+            <HelpCircle size={18} />
+          </button>
           <button className="mobile-close" type="button" onClick={() => setMobileNavOpen(false)} title="Close navigation">x</button>
         </div>
 
@@ -1230,6 +1235,39 @@ function App() {
               <button type="button" onClick={() => setShowSafety(true)}><Shield size={18} /><span>Safety tools</span></button>
             </div>
             <p className="command-hint">Use Cmd/Ctrl+K to open this palette anytime.</p>
+          </section>
+        </div>
+      )}
+
+      {showHelp && (
+        <div className="modal-backdrop" onClick={() => setShowHelp(false)}>
+          <section className="help-modal" onClick={(event) => event.stopPropagation()} aria-labelledby="how-to-title">
+            <div className="command-header">
+              <div>
+                <p className="eyebrow">Simple guide</p>
+                <h2 id="how-to-title">How to use Copy Paste</h2>
+              </div>
+              <button className="command-close" type="button" onClick={() => setShowHelp(false)} aria-label="Close help">x</button>
+            </div>
+            <ol className="how-to-steps">
+              <li>
+                <span><FolderPlus size={17} /></span>
+                <p><strong>Create folders.</strong> Use folders to group your saved text by topic.</p>
+              </li>
+              <li>
+                <span><FilePlus size={17} /></span>
+                <p><strong>Add text.</strong> Write or paste text. It saves in this browser automatically.</p>
+              </li>
+              <li>
+                <span><Search size={17} /></span>
+                <p><strong>Search fast.</strong> Search by folder name, text title, or tag.</p>
+              </li>
+              <li>
+                <span><Copy size={17} /></span>
+                <p><strong>Copy anytime.</strong> Copy text with the same spaces and line breaks.</p>
+              </li>
+            </ol>
+            <p className="help-note">Your data stays only in this browser. Export a backup before clearing browser data.</p>
           </section>
         </div>
       )}

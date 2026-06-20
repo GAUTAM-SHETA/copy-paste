@@ -95,6 +95,25 @@ button {
   padding-bottom: 2px;
 }
 
+.help-trigger {
+  align-items: center;
+  background: var(--control);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--accent);
+  display: inline-flex;
+  flex: 0 0 auto;
+  height: 36px;
+  justify-content: center;
+  margin-left: auto;
+  padding: 0;
+  width: 36px;
+}
+
+.help-trigger:hover {
+  background: var(--accent-soft);
+}
+
 .eyebrow {
   color: var(--accent);
   font-size: 0.72rem;
@@ -261,6 +280,50 @@ select:focus {
   display: grid;
   gap: 8px;
   grid-template-columns: auto minmax(0, 1fr);
+}
+
+.how-to-steps {
+  counter-reset: guide;
+  display: grid;
+  gap: 10px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.how-to-steps li {
+  align-items: center;
+  background: var(--panel);
+  border: 1px solid var(--hairline);
+  border-radius: 14px;
+  display: grid;
+  gap: 9px;
+  grid-template-columns: 30px minmax(0, 1fr);
+  min-height: 56px;
+  padding: 10px 12px;
+}
+
+.how-to-steps span {
+  align-items: center;
+  background: var(--accent-soft);
+  border-radius: 999px;
+  color: var(--accent);
+  display: inline-flex;
+  height: 34px;
+  justify-content: center;
+  width: 34px;
+}
+
+.how-to-steps p {
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.32;
+  margin: 0;
+}
+
+.how-to-steps strong {
+  color: var(--text);
+  font-weight: 600;
 }
 
 .quick-panel button,
@@ -1129,6 +1192,29 @@ textarea {
   max-width: 560px;
   padding: 20px;
   width: 100%;
+}
+
+.help-modal {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  box-shadow: var(--shadow);
+  display: grid;
+  gap: 16px;
+  max-width: 520px;
+  padding: 20px;
+  width: 100%;
+}
+
+.help-note {
+  background: var(--panel-soft);
+  border: 1px solid var(--hairline);
+  border-radius: 14px;
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.4;
+  margin: 0;
+  padding: 12px;
 }
 
 .command-header {
