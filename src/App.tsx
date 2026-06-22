@@ -344,6 +344,17 @@ const findParentId = (items: TreeItem[], id: string, parentId: string | null = n
   return undefined;
 };
 
+const getFolderPathIds = (items: TreeItem[], folderId: string, path: string[] = []): string[] => {
+  for (const item of items) {
+    if (!isFolder(item)) continue;
+    const nextPath = [...path, item.id];
+    if (item.id === folderId) return nextPath;
+    const found = getFolderPathIds(item.children, folderId, nextPath);
+    if (found.length > 0) return found;
+  }
+  return [];
+};
+
 const addItemToFolder = (items: TreeItem[], folderId: string | null, newItem: TreeItem): TreeItem[] => {
   if (!folderId) return [...items, newItem];
   return items.map((item) => {
@@ -613,14 +624,28 @@ function App() {
   });
 
   const selectFolder = (folderId: string | null) => {
+    const previousFolderId = selectedFolderId;
     setSelectedFolderId(folderId);
     setSelectedSnippetId(null);
+    setExpandedFolderIds((current) => {
+      const next = new Set(current);
+      if (previousFolderId && previousFolderId !== folderId) next.delete(previousFolderId);
+      if (folderId) getFolderPathIds(tree, folderId).forEach((id) => next.add(id));
+      return next;
+    });
     setMobileNavOpen(false);
   };
 
   const selectSnippet = (snippetId: string, folderId: string | null) => {
+    const previousFolderId = selectedFolderId;
     setSelectedSnippetId(snippetId);
     setSelectedFolderId(folderId);
+    setExpandedFolderIds((current) => {
+      const next = new Set(current);
+      if (previousFolderId && previousFolderId !== folderId) next.delete(previousFolderId);
+      if (folderId) getFolderPathIds(tree, folderId).forEach((id) => next.add(id));
+      return next;
+    });
     setMobileNavOpen(false);
   };
 
@@ -633,8 +658,14 @@ function App() {
     const name = window.prompt('Folder name', 'New folder')?.trim();
     if (!name) return;
     const folder = createFolder(name);
+    const previousFolderId = selectedFolderId;
     setTree((items) => addItemToFolder(items, selectedFolderId, folder));
-    if (selectedFolderId) setExpandedFolderIds((current) => new Set(current).add(selectedFolderId));
+    setExpandedFolderIds((current) => {
+      const next = new Set(current);
+      if (previousFolderId) getFolderPathIds(tree, previousFolderId).forEach((id) => next.add(id));
+      next.add(folder.id);
+      return next;
+    });
     setSelectedFolderId(folder.id);
     setSelectedSnippetId(null);
   };
@@ -689,7 +720,16 @@ function App() {
       const result = removeItem(items, itemId);
       return result.removed ? addItemToFolder(result.items, targetFolderId, { ...result.removed, updatedAt: now() }) : items;
     });
-    if (movingItem.type === 'snippet') setSelectedFolderId(targetFolderId);
+    if (movingItem.type === 'snippet') {
+      const previousFolderId = selectedFolderId;
+      setSelectedFolderId(targetFolderId);
+      setExpandedFolderIds((current) => {
+        const next = new Set(current);
+        if (previousFolderId && previousFolderId !== targetFolderId) next.delete(previousFolderId);
+        if (targetFolderId) getFolderPathIds(tree, targetFolderId).forEach((id) => next.add(id));
+        return next;
+      });
+    }
   };
 
   const duplicateItem = (item: TreeItem) => {
@@ -820,8 +860,11 @@ function App() {
   const toggleFolder = (folderId: string) => {
     setExpandedFolderIds((current) => {
       const next = new Set(current);
-      if (next.has(folderId)) next.delete(folderId);
-      else next.add(folderId);
+      if (current.has(folderId)) {
+        next.delete(folderId);
+        return next;
+      }
+      next.add(folderId);
       return next;
     });
   };
@@ -916,7 +959,11 @@ function App() {
                 </button>
               </div>
             </div>
-            {isFolder(item) && expanded && item.children.length > 0 && <div>{renderTree(item.children, depth + 1, item.id)}</div>}
+            {isFolder(item) && item.children.length > 0 && (
+              <div className={`tree-children ${expanded ? 'expanded' : 'collapsed'}`}>
+                <div className="tree-children-inner">{renderTree(item.children, depth + 1, item.id)}</div>
+              </div>
+            )}
           </div>
         );
       });
@@ -1057,7 +1104,7 @@ function App() {
                 onChange={(event) => {
                   const target = event.target.value === 'root' ? null : event.target.value;
                   if (activeSnippet) moveItem(activeSnippet.id, target);
-                  else setSelectedFolderId(target);
+                  else selectFolder(target);
                 }}
                 title="Move selected text"
               >

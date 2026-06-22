@@ -13,6 +13,8 @@
   --shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
   --hairline: #f0f0f0;
   --control: #f5f5f7;
+  --motion: 220ms cubic-bezier(0.22, 1, 0.36, 1);
+  --motion-slow: 360ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 * {
@@ -29,6 +31,11 @@ select {
 button {
   border: 0;
   cursor: pointer;
+  transition: background-color var(--motion), border-color var(--motion), box-shadow var(--motion), color var(--motion), opacity var(--motion), transform var(--motion);
+}
+
+button:active {
+  transform: scale(0.98);
 }
 
 .app-shell {
@@ -51,6 +58,7 @@ button {
   overflow-y: auto;
   padding: 22px;
   scrollbar-width: none;
+  transition: box-shadow var(--motion-slow), transform var(--motion-slow);
 }
 
 .sidebar::-webkit-scrollbar {
@@ -112,6 +120,7 @@ button {
 
 .help-trigger:hover {
   background: var(--accent-soft);
+  transform: translateY(-1px);
 }
 
 .eyebrow {
@@ -184,6 +193,7 @@ select {
   border-radius: 11px;
   color: var(--text);
   outline: none;
+  transition: background-color var(--motion), border-color var(--motion), box-shadow var(--motion);
   width: 100%;
 }
 
@@ -366,7 +376,12 @@ select:focus {
   min-height: 58px;
   padding: 10px 12px;
   text-align: left;
+  transition: background-color var(--motion), border-color var(--motion), transform var(--motion);
   width: 100%;
+}
+
+.root-drop:hover {
+  transform: translateY(-1px);
 }
 
 .root-drop span {
@@ -397,6 +412,7 @@ select:focus {
   gap: 4px;
   min-height: 42px;
   padding-right: 6px;
+  transition: background-color var(--motion), border-color var(--motion), box-shadow var(--motion), transform var(--motion);
 }
 
 .tree-row.snippet {
@@ -405,6 +421,28 @@ select:focus {
 
 .tree-row:hover {
   background: var(--panel-soft);
+  transform: translateX(2px);
+}
+
+.tree-children {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-4px);
+  transition: grid-template-rows var(--motion-slow), opacity 220ms ease, transform var(--motion-slow);
+}
+
+.tree-children.expanded {
+  grid-template-rows: 1fr;
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+.tree-children-inner {
+  min-height: 0;
+  overflow: hidden;
 }
 
 .tree-main {
@@ -429,12 +467,14 @@ select:focus {
   flex: 0 0 22px;
   height: 22px;
   justify-content: center;
+  transition: background-color var(--motion), color var(--motion), transform var(--motion);
   width: 22px;
 }
 
 .expand-button:hover {
   background: var(--control);
   color: var(--accent);
+  transform: scale(1.08);
 }
 
 .tree-icon {
@@ -447,7 +487,12 @@ select:focus {
   font-weight: 900;
   height: 27px;
   justify-content: center;
+  transition: background-color var(--motion), color var(--motion), transform var(--motion);
   width: 28px;
+}
+
+.tree-row:hover .tree-icon {
+  transform: scale(1.04);
 }
 
 .tree-row.snippet .tree-icon {
@@ -527,7 +572,20 @@ select:focus {
 
 .tree-row:hover .row-actions,
 .tree-row:focus-within .row-actions {
+  animation: actions-in var(--motion);
   display: flex;
+}
+
+@keyframes actions-in {
+  from {
+    opacity: 0;
+    transform: translateX(4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 .icon-button {
@@ -543,6 +601,11 @@ select:focus {
   min-height: 28px;
   padding: 0;
   width: 30px;
+}
+
+.icon-button:hover,
+.icon-action:hover {
+  transform: translateY(-1px);
 }
 
 .favorite-dot {
@@ -584,6 +647,7 @@ select:focus {
   min-height: calc(100vh - 44px);
   min-width: 0;
   padding: 18px;
+  transition: border-color var(--motion), box-shadow var(--motion);
 }
 
 .panel-header {
@@ -707,6 +771,19 @@ textarea {
   gap: 10px;
   margin-bottom: 14px;
   padding: 12px;
+  animation: panel-in var(--motion-slow);
+}
+
+@keyframes panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .safety-panel p {
@@ -736,7 +813,12 @@ textarea {
   box-shadow: 0 0 0 1px var(--line);
   box-sizing: border-box;
   height: 26px;
+  transition: box-shadow var(--motion), transform var(--motion);
   width: 26px;
+}
+
+.color-swatch:hover {
+  transform: scale(1.08);
 }
 
 .color-swatch.selected {
@@ -757,6 +839,7 @@ textarea {
   display: grid;
   gap: 8px;
   padding: 10px;
+  animation: panel-in var(--motion-slow);
 }
 
 .bulk-actions {
@@ -808,6 +891,7 @@ textarea {
   display: grid;
   gap: 7px;
   padding: 10px 12px;
+  transition: background-color var(--motion), border-color var(--motion), box-shadow var(--motion);
 }
 
 .meta-field:focus-within {
@@ -815,7 +899,7 @@ textarea {
   box-shadow: 0 0 0 4px var(--accent-soft);
 }
 
-.meta-field > span {
+.meta-field>span {
   align-items: center;
   color: var(--muted);
   display: inline-flex;
@@ -892,6 +976,7 @@ textarea {
   gap: 16px;
   justify-content: space-between;
   padding: 16px;
+  transition: border-color var(--motion), box-shadow var(--motion);
 }
 
 .folder-browser-header h3 {
@@ -980,11 +1065,13 @@ textarea {
   gap: 12px;
   min-height: 128px;
   padding: 12px;
+  transition: background-color var(--motion), border-color var(--motion), box-shadow var(--motion), transform var(--motion);
 }
 
 .folder-item-card:hover {
   border-color: #b9dcff;
   box-shadow: 0 10px 24px rgba(0, 102, 204, 0.08);
+  transform: translateY(-2px);
 }
 
 .folder-item-card:focus-visible {
@@ -1013,7 +1100,12 @@ textarea {
   display: inline-flex;
   height: 40px;
   justify-content: center;
+  transition: background-color var(--motion), color var(--motion), transform var(--motion);
   width: 40px;
+}
+
+.folder-item-card:hover .folder-item-icon {
+  transform: scale(1.04);
 }
 
 .folder-item-main strong,
@@ -1121,10 +1213,12 @@ textarea {
   min-height: 128px;
   padding: 12px;
   text-align: left;
+  transition: background-color var(--motion), border-color var(--motion), transform var(--motion);
 }
 
 .folder-add-card:hover {
   border-color: var(--accent);
+  transform: translateY(-2px);
 }
 
 .folder-add-card strong {
@@ -1170,6 +1264,7 @@ textarea {
 
 .modal-backdrop {
   align-items: flex-start;
+  animation: fade-in var(--motion);
   background: rgba(29, 29, 31, 0.28);
   bottom: 0;
   display: flex;
@@ -1182,7 +1277,18 @@ textarea {
   z-index: 20;
 }
 
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
 .command-palette {
+  animation: modal-in var(--motion-slow);
   background: var(--panel);
   border: 1px solid var(--line);
   border-radius: 18px;
@@ -1195,6 +1301,7 @@ textarea {
 }
 
 .help-modal {
+  animation: modal-in var(--motion-slow);
   background: var(--panel);
   border: 1px solid var(--line);
   border-radius: 18px;
@@ -1204,6 +1311,18 @@ textarea {
   max-width: 520px;
   padding: 20px;
   width: 100%;
+}
+
+@keyframes modal-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 .help-note {
@@ -1325,6 +1444,7 @@ textarea {
     opacity: 0;
     transform: translateY(-12px) scale(0.98);
   }
+
   to {
     opacity: 1;
     transform: translateY(0) scale(1);
@@ -1343,7 +1463,7 @@ textarea {
   width: 22px;
 }
 
-.toast > span:nth-child(2) {
+.toast>span:nth-child(2) {
   flex: 1 1 auto;
 }
 
@@ -1596,5 +1716,27 @@ textarea {
 
   .command-grid {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 1ms !important;
+  }
+
+  button:active,
+  .folder-add-card:hover,
+  .folder-item-card:hover,
+  .help-trigger:hover,
+  .icon-action:hover,
+  .icon-button:hover,
+  .root-drop:hover,
+  .tree-row:hover {
+    transform: none !important;
   }
 }
